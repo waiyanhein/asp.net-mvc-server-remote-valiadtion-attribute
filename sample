@@ -1,0 +1,20 @@
+
+//Model class. Using with exxtra field
+public class ViewModel{
+    [RemoteClientServer("IsNameUnique","Category",AdditionalFields = "Id",ErrorMessage="Name is already taken")]
+    public string Name { get; set; }
+}
+
+
+//Action for remote validation. Now using with extra field
+
+public JsonResult IsNameUnique(string Name,int Id)
+{
+    IEnumerable<Category> categories = categoryRepo.Categories.Where(x => x.Name.Trim() == Name);
+    if(Id>0)
+    {
+       categories = categories.Where(x => x.Id == Id);
+    }
+   Category category = categories.FirstOrDefault();
+            return Json(category==null, JsonRequestBehavior.AllowGet);
+}
